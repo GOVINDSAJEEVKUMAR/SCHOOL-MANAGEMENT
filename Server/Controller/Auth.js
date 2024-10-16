@@ -64,32 +64,43 @@ const Login = async (req, res) => {
     }
 
     // worker Check
-    const worker = await worker.findOne({ email });
-    if (worker) {
-      const isMatch = await bcrypt.compare(password, worker.password);
-      if (isMatch) {
-        const accessToken = jwt.sign({ email, role: worker.role }, process.env.JWT_SECRET, { expiresIn: '1m' });
-        const refreshToken = jwt.sign({ email, role: worker.role }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+    const Worker = await worker.findOne({ email });
+if (!Worker) {
+  return res.status(404).json({ message: 'Worker not found' });
+}
 
-        // Set cookies
-        res.cookie('accessToken', accessToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 1 * 60 * 1000, // 1 minute
-          sameSite: 'strict',
-        });
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          sameSite: 'strict',
-        });
+if (!Worker.password) {
+  return res.status(400).json({ message: 'Worker password is missing' });
+}
 
-        return res.status(200).json({ role: worker.role, accessToken, refreshToken });
-      } else {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-    }
+const isMatch = await bcrypt.compare(password, Worker.password);
+if (isMatch) {
+  if (!Worker.role) {
+    return res.status(400).json({ message: 'Worker role is missing' });
+  }
+
+  const accessToken = jwt.sign({ email, role: Worker.role }, process.env.JWT_SECRET, { expiresIn: '1m' });
+  const refreshToken = jwt.sign({ email, role: Worker.role }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+  // Set cookies
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1 * 60 * 1000, // 1 minute
+    sameSite: 'strict',
+  });
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: 'strict',
+  });
+
+  return res.status(200).json({ role: Worker.role, accessToken, refreshToken });
+} else {
+  return res.status(401).json({ message: 'Invalid credentials' });
+}
+
 
     return res.status(404).json({ message: "User not found" });
 

@@ -43,9 +43,9 @@ const Login = () => {
         if (userRole === 'admin') {
           navigate('/dashboard');
         } else if (userRole === 'staff') {
-          navigate('/home');
-        } else if (userRole === 'librarian') {
-          navigate('/book');
+          navigate('/staffdashboard');
+        } else if (userRole === 'worker') {
+          navigate('/dashboardLibarian');
         }
 
         alert('Login successful');

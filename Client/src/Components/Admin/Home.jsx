@@ -1,24 +1,32 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { HiMenuAlt3 } from "react-icons/hi";
-import { MdOutlineDashboard } from "react-icons/md";
-import { RiSettings4Line } from "react-icons/ri";
+import { MdOutlineDashboard,MdMenuBook } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
-import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineHeart,AiOutlineLogout } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+import { useDispatch,useSelector } from "react-redux";
 
 const Home = () => {
   const menus = [
-    { name: "dashboard", link: "/", icon: MdOutlineDashboard },
+    { name: "dashboard", link: "/dashboard", icon: MdOutlineDashboard },
     { name: "Adduser", link: "/staffdetails", icon: AiOutlineUser },
     { name: "Student", link: "/student", icon: FiMessageSquare },
-    { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "File Manager", link: "/", icon: FiFolder },
-    { name: "Cart", link: "/", icon: FiShoppingCart },
-    { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
-    { name: "Setting", link: "/", icon: RiSettings4Line },
+    { name: "Library", link: '/library', icon: MdMenuBook, margin: true },
+    
+    { name: "Logout", link: "/", icon: AiOutlineLogout },
   ];
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated, token } = useSelector((state) => state.auth); // Select authentication state
+
+  
+  useEffect(() => {
+    if (!token || !isAuthenticated) {
+      navigate('/'); 
+    }
+  }, [token, isAuthenticated, navigate]);
   return (
     <section className="flex gap-6">
       <div

@@ -38,13 +38,17 @@ const Dashboard = () => {
     const getCount = async () => {
       try {
         const response = await axios.get(`${GlobalApi.baseUrl}/auth/count`);
+        
+        // Log the API response for debugging purposes
+        console.log('API Response:', response.data);
+
+        // Ensure the correct field names in the API response
         setCounts({
-          staff: response.data.staffCount,
-          worker: response.data.workerCount,
-          book: response.data.bookCount,
-          student: response.data.studentCount,
+          staff: response.data.staff,
+          worker: response.data.workers,
+          book: response.data.books,
+          student: response.data.students,
         });
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching count data:', error);
       }
@@ -63,25 +67,25 @@ const Dashboard = () => {
         {/* Staff Count */}
         <div className="bg-blue-100 text-blue-800 p-6 rounded-lg shadow-md text-center min-w-[160px] min-h-[160px] flex flex-col justify-center items-center transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Staff</h2>
-          <p className="text-4xl">{counts.staff}</p>
+          <p className="text-4xl">{counts.staff}</p> {/* Display Staff Count */}
         </div>
 
         {/* Worker Count */}
         <div className="bg-green-100 text-green-800 p-6 rounded-lg shadow-md text-center min-w-[160px] min-h-[160px] flex flex-col justify-center items-center transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Workers</h2>
-          <p className="text-4xl">{counts.worker}</p>
+          <p className="text-4xl">{counts.worker}</p> {/* Display Worker Count */}
         </div>
 
         {/* Book Count */}
         <div className="bg-yellow-100 text-yellow-800 p-6 rounded-lg shadow-md text-center min-w-[160px] min-h-[160px] flex flex-col justify-center items-center transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Books</h2>
-          <p className="text-4xl">{counts.book}</p>
+          <p className="text-4xl">{counts.book}</p> {/* Display Book Count */}
         </div>
 
         {/* Student Count */}
         <div className="bg-red-100 text-red-800 p-6 rounded-lg shadow-md text-center min-w-[160px] min-h-[160px] flex flex-col justify-center items-center transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Students</h2>
-          <p className="text-4xl">{counts.student}</p>
+          <p className="text-4xl">{counts.student}</p> {/* Display Student Count */}
         </div>
       </div>
 
